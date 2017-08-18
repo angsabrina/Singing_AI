@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -81,19 +81,26 @@ public class Play_Sounds : MonoBehaviour {
 
 		if (ai_order.Count != 0) {
 			foreach (int eachNum in ai_order) {
-				Debug.Log (eachNum.ToString());
-				//Play_Note_Delayed (eachNum);
+				Debug.Log ("Currently in ai_order: " + eachNum.ToString ());
+				if (eachNum == 1) {
+					Invoke ("Play_Note_Delayed1", 2f);
+				} else if (eachNum == 2) {
+					Invoke ("Play_Note_Delayed2", 2f);
+				} else if (eachNum == 3) {
+					Invoke ("Play_Note_Delayed3", 2f);
+				}
+
 			}
 		}
 		if (rand == 1) {
 			Debug.Log ("AI played: buttonA");
-			Play_Note (1);
+			Play_Note_Delayed1();
 		} else if (rand == 2) {
 			Debug.Log ("AI played: buttonB");
-			Play_Note (2);
+			Play_Note_Delayed2();
 		} else if (rand == 3) {
 			Debug.Log ("AI played: buttonC");
-			Play_Note (3);
+			Play_Note_Delayed3();
 		}
 		ai_order.Add (rand);
 	}
@@ -108,13 +115,15 @@ public class Play_Sounds : MonoBehaviour {
 		}
 	}
 
-	void Play_Note_Delayed(int num) {
-		if (num == 1) {
-			buttonA_audio.PlayDelayed (88200);
-		} else if (num == 2) {
-			buttonB_audio.PlayDelayed (88200);
-		} else if (num == 3) {
-			buttonC_audio.PlayDelayed (88200);
-		}
+	void Play_Note_Delayed1() {
+		buttonA_audio.Play ();
 	}
+	void Play_Note_Delayed2() {
+		buttonB_audio.Play ();
+	}
+	void Play_Note_Delayed3() {
+		buttonC_audio.Play ();
+	}
+		
+
 }
