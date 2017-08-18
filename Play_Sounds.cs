@@ -15,18 +15,12 @@ public class Play_Sounds : MonoBehaviour {
 	List<int> player_order = new List<int>();
 
 
-	void Start() {
-		List<String> buttonHolder = new List<String>();
-		buttonHolder.Add("ButtonA");
-		buttonHolder.Add("ButtonB");
-		buttonHolder.Add("ButtonC");
-	}
-	// Update is called once per frame
 
-	//need to tell player their order was correct and make it go back to ai turn
+	// Update is called once per frame
 	void Update () {
 		if (ai_turn) {
-			AI_MakeSound ();
+			Invoke ("Play_Past_Notes", 2f);
+			Invoke("AI_MakeSound", 4f);
 			ai_turn = false;
 			player_order = new List<int>();
 		} else {
@@ -41,13 +35,30 @@ public class Play_Sounds : MonoBehaviour {
 					ai_turn = true;
 				}
 			}
+		}
+	}
 
+	IEnumerator Wait() {
+		yield return new WaitForSeconds(1);
+	}
 
-
-
-
-
-
+	void Play_Past_Notes() {
+		//should not be called on first round. (Checked: good)
+		if (ai_order.Count != 0) {
+			foreach (int eachNum in ai_order) {
+				StartCoroutine (Wait ());
+				Debug.Log ("Currently in ai_order: " + eachNum.ToString ());
+				if (eachNum == 1) {
+					Invoke ("Play_Note_Delayed1", 2f);
+					Debug.Log ("Playing A");
+				} else if (eachNum == 2) {
+					Invoke ("Play_Note_Delayed2", 2f);
+					Debug.Log ("Playing B");
+				} else if (eachNum == 3) {
+					Invoke ("Play_Note_Delayed3", 2f);
+					Debug.Log ("Playing C");
+				}
+			}
 		}
 	}
 
@@ -76,22 +87,10 @@ public class Play_Sounds : MonoBehaviour {
 	}
 
 	//AI randomizes which sound it will make next
+	//For some reason, the first time this method is called, it is playing all 3 notes at the same time... I think?
 	void AI_MakeSound() {
 		rand = UnityEngine.Random.Range (1, 4);
-
-		if (ai_order.Count != 0) {
-			foreach (int eachNum in ai_order) {
-				Debug.Log ("Currently in ai_order: " + eachNum.ToString ());
-				if (eachNum == 1) {
-					Invoke ("Play_Note_Delayed1", 2f);
-				} else if (eachNum == 2) {
-					Invoke ("Play_Note_Delayed2", 2f);
-				} else if (eachNum == 3) {
-					Invoke ("Play_Note_Delayed3", 2f);
-				}
-
-			}
-		}
+		Debug.Log ("rand = " + rand.ToString ());
 		if (rand == 1) {
 			Debug.Log ("AI played: buttonA");
 			Play_Note_Delayed1();
@@ -105,6 +104,7 @@ public class Play_Sounds : MonoBehaviour {
 		ai_order.Add (rand);
 	}
 
+	//Play note given number
 	void Play_Note(int num) {
 		if (num == 1) {
 			buttonA_audio.Play ();
@@ -115,6 +115,7 @@ public class Play_Sounds : MonoBehaviour {
 		}
 	}
 
+	//Play method used in invoke
 	void Play_Note_Delayed1() {
 		buttonA_audio.Play ();
 	}
@@ -124,6 +125,4 @@ public class Play_Sounds : MonoBehaviour {
 	void Play_Note_Delayed3() {
 		buttonC_audio.Play ();
 	}
-		
-
 }
